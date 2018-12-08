@@ -90,6 +90,17 @@ def nearestNeighborTraining():
     y_pred = classifier.predict(x_test)
     print(classification_report(y_test, y_pred))
 
+def randomForestTraining():
+    from sklearn.ensemble import RandomForestClassifier
+    rfc_model = RandomForestClassifier()
+    dataset = pd.read_csv("train.csv", names=(listOfFeatureKeys[1:] + ["Genre Class"]))
+    x = dataset.iloc[:, :-1].values  # attribute values
+    y = dataset.iloc[:, len(listOfFeatureKeys) - 1].values  # genre class
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.30)
+    rfc_model.fit(x_train, y_train)
+    rfc_predictions = rfc_model.predict(x_test)
+    print(classification_report(y_test, rfc_predictions))
+
 
 
 
@@ -98,3 +109,4 @@ def nearestNeighborTraining():
 #iteratePlaylists()
 
 nearestNeighborTraining()
+randomForestTraining()
