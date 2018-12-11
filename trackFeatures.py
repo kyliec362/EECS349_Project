@@ -10,6 +10,8 @@ from sklearn.metrics import classification_report, confusion_matrix
 import csv
 import random
 from sklearn.utils import shuffle
+from joblib import dump
+from sklearn.ensemble import RandomForestClassifier
 
 username = "kchesner98"
 clientID = "1bb4ca2adbe14ec299ae000ec92fd78e"
@@ -178,7 +180,6 @@ def train_with_kFold():
     plt.show()
 
 def kFold(X,y):
-    from sklearn.ensemble import RandomForestClassifier
     rfc_model = RandomForestClassifier()
     print(145, len(X), len(y))
     kf = KFold(n_splits=10, shuffle=True)
@@ -194,7 +195,6 @@ def kFold(X,y):
     return accuracy / len(y_test)
 
 def randomForestTraining(x,y):
-    from sklearn.ensemble import RandomForestClassifier
     rfc_model = RandomForestClassifier()
     print(145,len(x),len(y))
     # dataset = pd.read_csv("trainingWithTimbrePitchCut.csv", names=(listOfFeatureKeys[1:] + listOfTimbreKeys + listOfPitchKeys+ ["Genre Class"]))
@@ -211,6 +211,14 @@ def randomForestTraining(x,y):
             accuracy += 1
     return accuracy/len(y_test)
 
+def save_model():
+    dataset = pd.read_csv("final_noid.csv", names=(listOfFeatureKeys[1:] + listOfTimbreKeys + listOfPitchKeys + ["Genre Class"]))
+    attribute_vectors = dataset.iloc[:, :-1].values
+    classifications = dataset.iloc[:, (len(listOfFeatureKeys) + len(listOfTimbreKeys) + len(listOfPitchKeys)) - 1].values  # genre class
+    final_model = RandomForestClassifier()
+    final_model.fit(attribute_vectors, classifications)
+    dump(final_model, "RandomForestModel.joblib", protocol=2)
+
 def train_rf_with_subset():
     from copy import deepcopy
     plotPointsCount = []
@@ -225,7 +233,7 @@ def train_rf_with_subset():
         for j in range(i):
             ind = random.randint(1,len(datasetSub)-1)
             datasetSub = datasetSub.drop(datasetSub.index[ind])
-            x = datasetSub.iloc[:, :-2].values  # attribute values
+            x = datasetSub.iloc[:, :-1].values  # attribute values
             y = datasetSub.iloc[:, (len(listOfFeatureKeys) + len(listOfTimbreKeys) + len(listOfPitchKeys)) - 1].values  # genre class
         plotPointsCount.append(datasetSize-i)
         plotPointsPrecision.append(randomForestTraining(x,y))
@@ -238,8 +246,10 @@ def train_rf_with_subset():
     plt.ylabel('Accuracy')
     plt.show()
 
-#iteratePlaylists()
+# iteratePlaylists()
 #train_rf_with_subset()
-train_with_kFold()
+# train_with_kFold()
 #randomForestTraining()
+
+save_model()
 
