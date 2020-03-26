@@ -10,5 +10,8 @@ To collect training data, we used thousands of songs from various Spotify playli
 ## Classifying Songs
 Based on user queries, we use Spotify to search for possible songs and select the most closely matched song. We then collect the values for each attribute that the model was trained on. We output a classification using the model to predict the genre based on the attribute values.
 
-## Try It!
+## The Web App
+The code for the app itself can be found at https://github.com/corinneburger1/Genre-Classifier.
+
+## Check Out the Project!
 The project website is http://users.eecs.northwestern.edu/~rma7510/index.html where you can learn more about the process and try out the classifier.
